@@ -16,9 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-@EnableAutoConfiguration
 @SpringBootApplication
-@ComponentScan
 @MapperScan("com.csrc.mapper")
 public class Application {
     private static Logger logger = Logger.getLogger(Application.class);

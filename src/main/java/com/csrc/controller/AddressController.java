@@ -1,5 +1,6 @@
 package com.csrc.controller;
 
+import com.csrc.mapper.AddressMapper;
 import com.csrc.model.AddressNode;
 import com.csrc.service.AddressService;
 import org.apache.commons.lang.StringUtils;
@@ -22,6 +23,8 @@ import java.util.*;
 public class AddressController {
     @Autowired
     AddressService addressService;
+    @Autowired
+    AddressMapper addressMapper;
 
     @RequestMapping(value="/searchAddress", method= RequestMethod.GET)
     public List<AddressNode> searchWithGet(String addressName) throws IOException {
@@ -41,7 +44,7 @@ public class AddressController {
             Collections.sort(entityList,new Comparator<AddressNode>(){
                 @Override
                 public int compare(AddressNode o1, AddressNode o2) {
-                    return o1.getAddressLevel()-o2.getAddressLevel();
+                    return o1.getRegionLevel()-o2.getRegionLevel();
                 }
             });
         }
@@ -60,72 +63,104 @@ public class AddressController {
         File file= ResourceUtils.getFile("classpath:address.txt");
         BufferedReader reader=null;
         String temp=null;
-        String provAddrNo="";
-        String cityAddrNo="";
-        String areaAddrNo="";
-        String townAddrNo="";
-        String villageAddrNo="";
-        String provAddr="";
-        String cityAddr="";
-        String areaAddr="";
-        String townAddr="";
-        String villageAddr="";
+        String provinceCode="";
+        String cityCode="";
+        String districtCode="";
+        String townCode="";
+        String villageCode="";
+        String provinceName="";
+        String cityName="";
+        String districtName="";
+        String townName="";
+        String villageName="";
 
         List<AddressNode> list=new ArrayList<AddressNode>();
         try{
             reader=new BufferedReader(new FileReader(file));
             while((temp=reader.readLine())!=null){
                 String[] tempArr=temp.split("@@");
-                if(tempArr[2].equals("1")){
-                    provAddr=tempArr[1];
-                    provAddrNo=tempArr[0];
+                if(tempArr[4].equals("1")){
+                    provinceName=tempArr[3];
+                    provinceCode=tempArr[2];
+                    AddressNode node=new AddressNode();
+                    node.setProvinceName(provinceName);
+                    node.setProvinceCode(provinceCode);
+                    node.setCode(provinceCode);
+                    node.setName(provinceName);
+                    node.setParentCode(tempArr[0]);
+                    node.setAncestors(tempArr[1]);
+                    node.setFullAddressName(provinceName);//组装1级全地址，例如江苏省
+                    list.add(node);
                 }else if(tempArr[2].equals("2")){
-                    cityAddr=tempArr[1];
-                    cityAddrNo=tempArr[0];
+                    cityName=tempArr[3];
+                    cityCode=tempArr[2];
+                    AddressNode node=new AddressNode();
+                    node.setCityName(cityName);
+                    node.setCityCode(cityCode);
+                    node.setProvinceName(provinceName);
+                    node.setProvinceCode(provinceCode);
+                    node.setCode(cityCode);
+                    node.setName(cityName);
+                    node.setParentCode(tempArr[0]);
+                    node.setAncestors(tempArr[1]);
+                    node.setFullAddressName(provinceName+cityName);//组装2级全地址，例如江苏省南通市
+                    list.add(node);
                 }else if(tempArr[2].equals("3")){
-                    areaAddr=tempArr[1];
-                    areaAddrNo=tempArr[0];
+                    districtName=tempArr[3];
+                    districtCode=tempArr[2];
 
                     AddressNode node=new AddressNode();
-                    node.setAreaAddr(areaAddr);
-                    node.setAreaAddrNo(areaAddrNo);
-                    node.setCityAddr(cityAddr);
-                    node.setCityAddrNo(cityAddrNo);
-                    node.setProvAddr(provAddr);
-                    node.setProvAddrNo(provAddrNo);
-                    node.setFullAddressName(provAddr+cityAddr+areaAddr);//组装3级全地址，例如江苏省南通市海安县
+                    node.setDistrictName(districtName);
+                    node.setDistrictCode(districtCode);
+                    node.setCityName(cityName);
+                    node.setCityCode(cityCode);
+                    node.setProvinceName(provinceName);
+                    node.setProvinceCode(provinceCode);
+                    node.setCode(districtCode);
+                    node.setName(districtCode);
+                    node.setParentCode(tempArr[0]);
+                    node.setAncestors(tempArr[1]);
+                    node.setFullAddressName(provinceName+cityName+districtName);//组装3级全地址，例如江苏省南通市海安县
                     list.add(node);
 
                 }else if(tempArr[2].equals("4")){
-                    townAddr=tempArr[1];
-                    townAddrNo=tempArr[0];
+                    townName=tempArr[3];
+                    townCode=tempArr[2];
 
                     AddressNode node=new AddressNode();
-                    node.setAreaAddr(areaAddr);
-                    node.setAreaAddrNo(areaAddrNo);
-                    node.setCityAddr(cityAddr);
-                    node.setCityAddrNo(cityAddrNo);
-                    node.setProvAddr(provAddr);
-                    node.setProvAddrNo(provAddrNo);
-                    node.setTownAddr(townAddr);
-                    node.setTownAddrNo(townAddrNo);
-                    node.setFullAddressName(provAddr+cityAddr+areaAddr+townAddr);//组装4级全地址，例如江苏省南通市海安县李堡镇
+                    node.setTownName(townName);
+                    node.setTownCode(townCode);
+                    node.setDistrictName(districtName);
+                    node.setDistrictCode(districtCode);
+                    node.setCityName(cityName);
+                    node.setCityCode(cityCode);
+                    node.setProvinceName(provinceName);
+                    node.setProvinceCode(provinceCode);
+                    node.setCode(townCode);
+                    node.setName(townName);
+                    node.setParentCode(tempArr[0]);
+                    node.setAncestors(tempArr[1]);
+                    node.setFullAddressName(provinceName+cityName+districtName+townName);//组装4级全地址，例如江苏省南通市海安县李堡镇
                     list.add(node);
                 }else {
-                    villageAddr=tempArr[1];
-                    villageAddrNo=tempArr[0];
+                    villageName=tempArr[3];
+                    villageCode=tempArr[2];
                     AddressNode node=new AddressNode();
-                    node.setAreaAddr(areaAddr);
-                    node.setAreaAddrNo(areaAddrNo);
-                    node.setCityAddr(cityAddr);
-                    node.setCityAddrNo(cityAddrNo);
-                    node.setProvAddr(provAddr);
-                    node.setProvAddrNo(provAddrNo);
-                    node.setTownAddr(townAddr);
-                    node.setTownAddrNo(townAddrNo);
-                    node.setVillageAddr(villageAddr);
-                    node.setVillageAddrNo(villageAddrNo);
-                    node.setFullAddressName(provAddr+cityAddr+areaAddr+townAddr+villageAddr);//数据库中存储的是5级全地址
+                    node.setVillageName(villageName);
+                    node.setVillageCode(villageCode);
+                    node.setTownName(townName);
+                    node.setTownCode(townCode);
+                    node.setDistrictName(districtName);
+                    node.setDistrictCode(districtCode);
+                    node.setCityName(cityName);
+                    node.setCityCode(cityCode);
+                    node.setProvinceName(provinceName);
+                    node.setProvinceCode(provinceCode);
+                    node.setCode(villageCode);
+                    node.setName(villageName);
+                    node.setParentCode(tempArr[0]);
+                    node.setAncestors(tempArr[1]);
+                    node.setFullAddressName(provinceName+cityName+districtName+townName+villageName);//数据库中存储的是5级全地址
                     list.add(node);
                 }
             }
@@ -149,11 +184,11 @@ public class AddressController {
         while(lineNum<list.size()){
             System.out.println("开始linNum:"+lineNum);
             List<AddressNode> listTemp=list.subList(lineNum,(list.size()-lineNum>500)?lineNum+500:list.size());
-            //addressMapper.importIntoDb(listTemp);//存入结构化数据库中，但是暂时用不到
+            addressMapper.importIntoDb(listTemp);//存入结构化数据库中，但是暂时用不到
             addressService.saveEntity(listTemp);//存入es中
             System.out.println("结束linNum:"+lineNum);
             lineNum+=500;//分段执行，以免outOfMemory
-            Thread.sleep(1000);//给es或数据库一个缓冲时间
+            Thread.sleep(500);//给es或数据库一个缓冲时间
         }
         System.out.println("处理结束："+df.format(new Date()));
     }

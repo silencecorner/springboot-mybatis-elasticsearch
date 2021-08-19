@@ -9,92 +9,96 @@ public class AddressNode {
     public static final String TYPE = "address";
 
     private String fullAddressName;
-    private String provAddrNo;
-    private String provAddr;//省
-    private String cityAddrNo;
-    private String cityAddr;//市
-    private String areaAddrNo;
-    private String areaAddr;//区县
-    private String townAddrNo;
-    private String townAddr;//镇
-    private String villageAddrNo;
-    private String villageAddr;//村
-    private Integer addressLevel;
+    private String code; // 当前no，可以是5级中的任何一级
+    private String parentCode;
+    private String ancestors;
+    private String name; // 当前区名称
+    private String provinceCode;
+    private String provinceName;//省
+    private String cityCode;
+    private String cityName;//市
+    private String districtCode;
+    private String districtName;//区县
+    private String townCode;
+    private String townName;//镇
+    private String villageCode;
+    private String villageName;//村
+    private Integer regionLevel;
 
     public AddressNode() {
         super();
     }
 
-    public String getProvAddr() {
-        return provAddr;
+    public String getProvinceName() {
+        return provinceName;
     }
 
-    public void setProvAddr(String provAddr) {
-        this.provAddr = provAddr;
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
     }
 
-    public String getCityAddr() {
-        return cityAddr;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setCityAddr(String cityAddr) {
-        this.cityAddr = cityAddr;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
-    public String getAreaAddr() {
-        return areaAddr;
+    public String getDistrictName() {
+        return districtName;
     }
 
-    public void setAreaAddr(String areaAddr) {
-        this.areaAddr = areaAddr;
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
     }
 
-    public String getTownAddr() {
-        return townAddr;
+    public String getTownName() {
+        return townName;
     }
 
-    public void setTownAddr(String townAddr) {
-        this.townAddr = townAddr;
+    public void setTownName(String townName) {
+        this.townName = townName;
     }
 
-    public String getVillageAddr() {
-        return villageAddr;
+    public String getVillageName() {
+        return villageName;
     }
 
-    public void setVillageAddr(String villageAddr) {
-        this.villageAddr = villageAddr;
+    public void setVillageName(String villageName) {
+        this.villageName = villageName;
     }
 
-    public String getCityAddrNo() {
-        return cityAddrNo;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setCityAddrNo(String cityAddrNo) {
-        this.cityAddrNo = cityAddrNo;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
-    public String getAreaAddrNo() {
-        return areaAddrNo;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setAreaAddrNo(String areaAddrNo) {
-        this.areaAddrNo = areaAddrNo;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String getTownAddrNo() {
-        return townAddrNo;
+    public String getTownCode() {
+        return townCode;
     }
 
-    public void setTownAddrNo(String townAddrNo) {
-        this.townAddrNo = townAddrNo;
+    public void setTownCode(String townCode) {
+        this.townCode = townCode;
     }
 
-    public String getVillageAddrNo() {
-        return villageAddrNo;
+    public String getVillageCode() {
+        return villageCode;
     }
 
-    public void setVillageAddrNo(String villageAddrNo) {
-        this.villageAddrNo = villageAddrNo;
+    public void setVillageCode(String villageCode) {
+        this.villageCode = villageCode;
     }
 
     public String getFullAddressName() {
@@ -105,19 +109,51 @@ public class AddressNode {
         this.fullAddressName = fullAddressName;
     }
 
-    public String getProvAddrNo() {
-        return provAddrNo;
+    public String getProvinceCode() {
+        return provinceCode;
     }
 
-    public void setProvAddrNo(String provAddrNo) {
-        this.provAddrNo = provAddrNo;
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
     }
 
-    public Integer getAddressLevel() {
-        return addressLevel;
+    public Integer getRegionLevel() {
+        return regionLevel;
     }
 
-    public void setAddressLevel(Integer addressLevel) {
-        this.addressLevel = addressLevel;
+    public void setRegionLevel(Integer regionLevel) {
+        this.regionLevel = regionLevel;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getParentCode() {
+        return parentCode;
+    }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode;
+    }
+
+    public String getAncestors() {
+        return ancestors;
+    }
+
+    public void setAncestors(String ancestors) {
+        this.ancestors = ancestors;
     }
 }
