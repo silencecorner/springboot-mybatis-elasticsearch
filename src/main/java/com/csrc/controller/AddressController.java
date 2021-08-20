@@ -5,6 +5,7 @@ import com.csrc.model.AddressNode;
 import com.csrc.service.AddressService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,8 @@ public class AddressController {
     AddressService addressService;
     @Autowired
     AddressMapper addressMapper;
+    @Value("${address-path:classpath\\:address.txt}")
+    String addressPath;
 
     @RequestMapping(value="/searchAddress", method= RequestMethod.GET)
     public List<AddressNode> searchWithGet(String addressName) throws IOException {
@@ -60,7 +63,7 @@ public class AddressController {
     public void readVillageAddress() throws InterruptedException, FileNotFoundException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("处理开始："+df.format(new Date()));
-        File file= ResourceUtils.getFile("classpath:address.txt");
+        File file= ResourceUtils.getFile(addressPath);
         BufferedReader reader=null;
         String temp=null;
         String provinceCode="";
