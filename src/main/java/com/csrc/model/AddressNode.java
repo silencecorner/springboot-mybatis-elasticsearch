@@ -15,14 +15,14 @@ public class AddressNode {
     private String name; // 当前区名称
     private String provinceCode;
     private String provinceName;//省
-    private String cityCode;
-    private String cityName;//市
-    private String districtCode;
-    private String districtName;//区县
-    private String townCode;
-    private String townName;//镇
-    private String villageCode;
-    private String villageName;//村
+    private String cityCode = "";
+    private String cityName = "";//市
+    private String districtCode = "";
+    private String districtName = "";//区县
+    private String townCode = "";
+    private String townName = "";//镇
+    private String villageCode = "";
+    private String villageName = "";//村
     private Integer regionLevel;
 
     public AddressNode() {

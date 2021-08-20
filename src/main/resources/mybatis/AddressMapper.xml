@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.csrc.mapper.AddressMapper">
   <insert id="importIntoDb" parameterType="java.util.List">
-    insert into blade_region (code, parent_code,ancestors,name,province_code,province_name,city_code,city_name,district_code,district_name,town_code,town_name,village_code,village_name,region_level,sort) values
+    insert into blade_region_new (code, parent_code,ancestors,name,province_code,province_name,city_code,city_name,district_code,district_name,town_code,town_name,village_code,village_name,region_level,sort,remark) values
     <foreach collection ="list" item="node" index= "index" separator =",">
-      (#{node.code},#{node.parentCode},#{node.ancestors},#{node.name},#{node.provinceCode},#{node.provinceName},#{node.cityCode},#{node.cityName},#{node.districtCode},#{node.districtName},#{node.townCode},#{node.townName},,#{node.villageCode},#{node.villageName},#{node.regionLevel},1)
+      (#{node.code},#{node.parentCode},#{node.ancestors},#{node.name},#{node.provinceCode},#{node.provinceName},#{node.cityCode},#{node.cityName},#{node.districtCode},#{node.districtName},#{node.townCode},#{node.townName},#{node.villageCode},#{node.villageName},#{node.regionLevel},1,'')
     </foreach>
   </insert>
 

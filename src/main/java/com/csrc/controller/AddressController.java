@@ -92,9 +92,10 @@ public class AddressController {
                     node.setName(provinceName);
                     node.setParentCode(tempArr[0]);
                     node.setAncestors(tempArr[1]);
+                    node.setRegionLevel(1);
                     node.setFullAddressName(provinceName);//组装1级全地址，例如江苏省
                     list.add(node);
-                }else if(tempArr[2].equals("2")){
+                }else if(tempArr[4].equals("2")){
                     cityName=tempArr[3];
                     cityCode=tempArr[2];
                     AddressNode node=new AddressNode();
@@ -106,9 +107,10 @@ public class AddressController {
                     node.setName(cityName);
                     node.setParentCode(tempArr[0]);
                     node.setAncestors(tempArr[1]);
+                    node.setRegionLevel(2);
                     node.setFullAddressName(provinceName+cityName);//组装2级全地址，例如江苏省南通市
                     list.add(node);
-                }else if(tempArr[2].equals("3")){
+                }else if(tempArr[4].equals("3")){
                     districtName=tempArr[3];
                     districtCode=tempArr[2];
 
@@ -123,10 +125,11 @@ public class AddressController {
                     node.setName(districtCode);
                     node.setParentCode(tempArr[0]);
                     node.setAncestors(tempArr[1]);
+                    node.setRegionLevel(3);
                     node.setFullAddressName(provinceName+cityName+districtName);//组装3级全地址，例如江苏省南通市海安县
                     list.add(node);
 
-                }else if(tempArr[2].equals("4")){
+                }else if(tempArr[4].equals("4")){
                     townName=tempArr[3];
                     townCode=tempArr[2];
 
@@ -143,6 +146,7 @@ public class AddressController {
                     node.setName(townName);
                     node.setParentCode(tempArr[0]);
                     node.setAncestors(tempArr[1]);
+                    node.setRegionLevel(4);
                     node.setFullAddressName(provinceName+cityName+districtName+townName);//组装4级全地址，例如江苏省南通市海安县李堡镇
                     list.add(node);
                 }else {
@@ -163,6 +167,7 @@ public class AddressController {
                     node.setName(villageName);
                     node.setParentCode(tempArr[0]);
                     node.setAncestors(tempArr[1]);
+                    node.setRegionLevel(5);
                     node.setFullAddressName(provinceName+cityName+districtName+townName+villageName);//数据库中存储的是5级全地址
                     list.add(node);
                 }
