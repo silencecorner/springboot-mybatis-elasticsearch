@@ -23,7 +23,7 @@
     <br/>
 </div>
 
-使用https://github.com/silencecorner/five_addr/tree/txt抓去数据有67万条
+使用https://github.com/silencecorner/five_addr/tree/txt 抓去数据有67万条
 检索时，拿fullAddressName进行匹配，默认带出5条数据，相似度降序排列.例如键入http://localhost:7070/address/searchAddress?addressName=海安李堡陈庄村十一组47号
 结果默认展示10条，按相似度降序排列，用的时候一般用第一条，咋用看需求
 

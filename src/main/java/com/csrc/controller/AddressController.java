@@ -31,22 +31,9 @@ public class AddressController {
         List<AddressNode> entityList = null;
         if(StringUtils.isNotEmpty(addressName)) {
             entityList = addressService.searchEntity(addressName,level,size);
-        }
-        return entityList;
-    }
-
-    @RequestMapping(value="/searchAddress", method= RequestMethod.POST)
-    public List<AddressNode> searchAddressWithPost(@RequestBody Map<String,String> map) throws IOException {
-        List<AddressNode> entityList = null;
-        if(StringUtils.isNotEmpty(map.get("addressName"))) {
-            entityList = addressService.searchEntity(map.get("addressName"),map.get("level") == null ? 3 : Integer.valueOf(map.get("level")),map.get("size") == null ? 5 : Integer.valueOf(map.get("size")));
             //若返回的十条数据中有三级四级地址，将它们提到前面，底层使用的归并排序，不会破坏三级、四级、五级各自内部初始顺序
-            Collections.sort(entityList,new Comparator<AddressNode>(){
-                @Override
-                public int compare(AddressNode o1, AddressNode o2) {
-                    return o1.getRegionLevel()-o2.getRegionLevel();
-                }
-            });
+            entityList = new ArrayList<>(entityList);
+            entityList.sort(Comparator.comparingInt(AddressNode::getRegionLevel));
         }
         return entityList;
     }
