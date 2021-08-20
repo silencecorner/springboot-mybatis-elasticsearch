@@ -1,14 +1,20 @@
 package com.csrc.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+
 /**
  * Created by jianan on 2018/8/23.
  */
+@Document(indexName = "address", useServerConfiguration = true)
 public class AddressNode {
     public static final String INDEX_NAME = "address";
 
     public static final String TYPE = "address";
 
     private String fullAddressName;
+    @Id
     private String code; // 当前no，可以是5级中的任何一级
     private String parentCode;
     private String ancestors;

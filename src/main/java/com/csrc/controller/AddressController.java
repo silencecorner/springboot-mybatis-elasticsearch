@@ -3,14 +3,11 @@ package com.csrc.controller;
 import com.csrc.mapper.AddressMapper;
 import com.csrc.model.AddressNode;
 import com.csrc.service.AddressService;
-import org.apache.commons.lang.StringUtils;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -26,14 +23,14 @@ public class AddressController {
     AddressService addressService;
     @Autowired
     AddressMapper addressMapper;
-    @Value("${address-path:classpath\\:address.txt}")
+    @Value("${address-path:classpath:address.txt}")
     String addressPath;
 
     @RequestMapping(value="/searchAddress", method= RequestMethod.GET)
-    public List<AddressNode> searchWithGet(String addressName) throws IOException {
+    public List<AddressNode> searchWithGet(String addressName,@RequestParam(defaultValue = "3") Integer level,@RequestParam(defaultValue = "5") Integer size) throws IOException {
         List<AddressNode> entityList = null;
         if(StringUtils.isNotEmpty(addressName)) {
-            entityList = addressService.searchEntity(addressName);
+            entityList = addressService.searchEntity(addressName,level,size);
         }
         return entityList;
     }
@@ -42,7 +39,7 @@ public class AddressController {
     public List<AddressNode> searchAddressWithPost(@RequestBody Map<String,String> map) throws IOException {
         List<AddressNode> entityList = null;
         if(StringUtils.isNotEmpty(map.get("addressName"))) {
-            entityList = addressService.searchEntity(map.get("addressName"));
+            entityList = addressService.searchEntity(map.get("addressName"),map.get("level") == null ? 3 : Integer.valueOf(map.get("level")),map.get("size") == null ? 5 : Integer.valueOf(map.get("size")));
             //若返回的十条数据中有三级四级地址，将它们提到前面，底层使用的归并排序，不会破坏三级、四级、五级各自内部初始顺序
             Collections.sort(entityList,new Comparator<AddressNode>(){
                 @Override

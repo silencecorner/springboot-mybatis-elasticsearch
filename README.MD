@@ -23,163 +23,101 @@
     <br/>
 </div>
 
-# 过程&结果 #
+使用https://github.com/silencecorner/five_addr/tree/txt抓去数据有67万条
+检索时，拿fullAddressName进行匹配，默认带出5条数据，相似度降序排列.例如键入http://localhost:7070/address/searchAddress?addressName=海安李堡陈庄村十一组47号
+结果默认展示10条，按相似度降序排列，用的时候一般用第一条，咋用看需求
 
-将国家统计局爬取的地址数据，导入es中用于检索，原数据存放格式为：
-
-     110000000000	北京市	1	省
-     110100000000	市辖区	2	市
-     110101000000	东城区	3	区县
-     110101001000	东华门街道办事处	4	街道
-     110101001001	多福巷社区居委会	5	村、社区
-     110101001002	银闸社区居委会	5	村、社区
-中间的间隔为空格或者tab，不太好分隔，首先在nodepad++中将所有的空格和tab都使用@@替换，这样可以使用@@分隔。处理后的格式为：
-
-     110000000000@@北京市@@1@@省
-     110100000000@@市辖区@@2@@市
-     110101000000@@东城区@@3@@区县
-     110101001000@@东华门街道办事处@@4@@街道
-     110101001001@@多福巷社区居委会@@5@@村、社区
-     110101001002@@银闸社区居委会@@5@@村、社区
-     110101001005@@东厂社区居委会@@5@@村、社区
-     110101001006@@智德社区居委会@@5@@村、社区
-
-es中存储的数据结构为若干以下格式的文档，约67万条：
-
-     {
-        "fullAddressName": "北京市市辖区东城区东华门街道办事处黄图岗社区居委会",
-        "provAddrNo": "﻿110000000000",
-        "provAddr": "北京市",
-        "cityAddrNo": "110100000000",
-        "cityAddr": "市辖区",
-        "areaAddrNo": "110101000000",
-        "areaAddr": "东城区",
-        "townAddrNo": "110101001000",
-        "townAddr": "东华门街道办事处",
-        "villageAddrNo": "110101001008",
-        "villageAddr": "黄图岗社区居委会"
-     }
-
-检索时，拿fullAddressName进行匹配，默认带出10条数据，相似度降序排列.例如键入"http://localhost:7070/address/searchAddress?addressName=海安李堡陈庄村十一组47号"时，结果默认展示10条，按相似度降序排列，用的时候一般用第一条，咋用看需求
-
-    [{
-	"fullAddressName": "江苏省南通市海安县李堡镇陈庄村委会",
-	"provAddrNo": "320000000000",
-	"provAddr": "江苏省",
-	"cityAddrNo": "320600000000",
-	"cityAddr": "南通市",
-	"areaAddrNo": "320621000000",
-	"areaAddr": "海安县",
-	"townAddrNo": "320621103000",
-	"townAddr": "李堡镇",
-	"villageAddrNo": "320621103200",
-	"villageAddr": "陈庄村委会"
-    }, {
-	"fullAddressName": "吉林省松原市长岭县前七号镇西十一号村委会",
-	"provAddrNo": "220000000000",
-	"provAddr": "吉林省",
-	"cityAddrNo": "220700000000",
-	"cityAddr": "松原市",
-	"areaAddrNo": "220722000000",
-	"areaAddr": "长岭县",
-	"townAddrNo": "220722104000",
-	"townAddr": "前七号镇",
-	"villageAddrNo": "220722104207",
-	"villageAddr": "西十一号村委会"
-    }, {
-	"fullAddressName": "吉林省长春市榆树市八号镇十一号村委会",
-	"provAddrNo": "220000000000",
-	"provAddr": "吉林省",
-	"cityAddrNo": "220100000000",
-	"cityAddr": "长春市",
-	"areaAddrNo": "220182000000",
-	"areaAddr": "榆树市",
-	"townAddrNo": "220182110000",
-	"townAddr": "八号镇",
-	"villageAddrNo": "220182110205",
-	"villageAddr": "十一号村委会"
-    }, {
-	"fullAddressName": "吉林省松原市长岭县三十号乡三十一村委会",
-	"provAddrNo": "220000000000",
-	"provAddr": "吉林省",
-	"cityAddrNo": "220700000000",
-	"cityAddr": "松原市",
-	"areaAddrNo": "220722000000",
-	"areaAddr": "长岭县",
-	"townAddrNo": "220722209000",
-	"townAddr": "三十号乡",
-	"villageAddrNo": "220722209202",
-	"villageAddr": "三十一村委会"
-     }, {
-	"fullAddressName": "江苏省南通市海安县李堡镇李堡社区居委会",
-	"provAddrNo": "320000000000",
-	"provAddr": "江苏省",
-	"cityAddrNo": "320600000000",
-	"cityAddr": "南通市",
-	"areaAddrNo": "320621000000",
-	"areaAddr": "海安县",
-	"townAddrNo": "320621103000",
-	"townAddr": "李堡镇",
-	"villageAddrNo": "320621103007",
-	"villageAddr": "李堡社区居委会"
-     }, {
-	"fullAddressName": "天津市市辖区静海区独流镇十一堡村委会",
-	"provAddrNo": "120000000000",
-	"provAddr": "天津市",
-	"cityAddrNo": "120100000000",
-	"cityAddr": "市辖区",
-	"areaAddrNo": "120118000000",
-	"areaAddr": "静海区",
-	"townAddrNo": "120118102000",
-	"townAddr": "独流镇",
-	"villageAddrNo": "120118102218",
-	"villageAddr": "十一堡村委会"
-     }, {
-	"fullAddressName": "吉林省松原市扶余市三岔河镇西十一号村委会",
-	"provAddrNo": "220000000000",
-	"provAddr": "吉林省",
-	"cityAddrNo": "220700000000",
-	"cityAddr": "松原市",
-	"areaAddrNo": "220781000000",
-	"areaAddr": "扶余市",
-	"townAddrNo": "220781100000",
-	"townAddr": "三岔河镇",
-	"villageAddrNo": "220781100211",
-	"villageAddr": "西十一号村委会"
-     }, {
-	"fullAddressName": "吉林省松原市长岭县前七号镇东十一村委会",
-	"provAddrNo": "220000000000",
-	"provAddr": "吉林省",
-	"cityAddrNo": "220700000000",
-	"cityAddr": "松原市",
-	"areaAddrNo": "220722000000",
-	"areaAddr": "长岭县",
-	"townAddrNo": "220722104000",
-	"townAddr": "前七号镇",
-	"villageAddrNo": "220722104213",
-	"villageAddr": "东十一村委会"
-     }, {
-	"fullAddressName": "河北省张家口市崇礼区狮子沟乡十一号村委会",
-	"provAddrNo": "130000000000",
-	"provAddr": "河北省",
-	"cityAddrNo": "130700000000",
-	"cityAddr": "张家口市",
-	"areaAddrNo": "130709000000",
-	"areaAddr": "崇礼区",
-	"townAddrNo": "130709205000",
-	"townAddr": "狮子沟乡",
-	"villageAddrNo": "130709205216",
-	"villageAddr": "十一号村委会"
-     }, {
-	"fullAddressName": "吉林省松原市扶余市三岔河镇东十一号村委会",
-	"provAddrNo": "220000000000",
-	"provAddr": "吉林省",
-	"cityAddrNo": "220700000000",
-	"cityAddr": "松原市",
-	"areaAddrNo": "220781000000",
-	"areaAddr": "扶余市",
-	"townAddrNo": "220781100000",
-	"townAddr": "三岔河镇",
-	"villageAddrNo": "220781100210",
-	"villageAddr": "东十一号村委会"
-    }]
+```json
+[
+    {
+        "fullAddressName": "江苏省南通市海安市李堡镇陈庄村委会",
+        "code": "320685103200",
+        "parentCode": "320685103",
+        "ancestors": "00,32,3206,320685,320685103",
+        "name": "陈庄村委会",
+        "provinceCode": "32",
+        "provinceName": "江苏省",
+        "cityCode": "3206",
+        "cityName": "南通市",
+        "districtCode": "320685",
+        "districtName": "海安市",
+        "townCode": "320685103",
+        "townName": "李堡镇",
+        "villageCode": "320685103200",
+        "villageName": "陈庄村委会",
+        "regionLevel": 5
+    },
+    {
+        "fullAddressName": "天津市天津市静海区独流镇十一堡村委会",
+        "code": "120118102218",
+        "parentCode": "120118102",
+        "ancestors": "00,12,1201,120118,120118102",
+        "name": "十一堡村委会",
+        "provinceCode": "12",
+        "provinceName": "天津市",
+        "cityCode": "1201",
+        "cityName": "天津市",
+        "districtCode": "120118",
+        "districtName": "静海区",
+        "townCode": "120118102",
+        "townName": "独流镇",
+        "villageCode": "120118102218",
+        "villageName": "十一堡村委会",
+        "regionLevel": 5
+    },
+    {
+        "fullAddressName": "江苏省南通市海安市李堡镇新庄村委会",
+        "code": "320685103201",
+        "parentCode": "320685103",
+        "ancestors": "00,32,3206,320685,320685103",
+        "name": "新庄村委会",
+        "provinceCode": "32",
+        "provinceName": "江苏省",
+        "cityCode": "3206",
+        "cityName": "南通市",
+        "districtCode": "320685",
+        "districtName": "海安市",
+        "townCode": "320685103",
+        "townName": "李堡镇",
+        "villageCode": "320685103201",
+        "villageName": "新庄村委会",
+        "regionLevel": 5
+    },
+    {
+        "fullAddressName": "江苏省南通市海安市李堡镇蒋庄村委会",
+        "code": "320685103206",
+        "parentCode": "320685103",
+        "ancestors": "00,32,3206,320685,320685103",
+        "name": "蒋庄村委会",
+        "provinceCode": "32",
+        "provinceName": "江苏省",
+        "cityCode": "3206",
+        "cityName": "南通市",
+        "districtCode": "320685",
+        "districtName": "海安市",
+        "townCode": "320685103",
+        "townName": "李堡镇",
+        "villageCode": "320685103206",
+        "villageName": "蒋庄村委会",
+        "regionLevel": 5
+    },
+    {
+        "fullAddressName": "江苏省南通市海安市李堡镇富庄村委会",
+        "code": "320685103213",
+        "parentCode": "320685103",
+        "ancestors": "00,32,3206,320685,320685103",
+        "name": "富庄村委会",
+        "provinceCode": "32",
+        "provinceName": "江苏省",
+        "cityCode": "3206",
+        "cityName": "南通市",
+        "districtCode": "320685",
+        "districtName": "海安市",
+        "townCode": "320685103",
+        "townName": "李堡镇",
+        "villageCode": "320685103213",
+        "villageName": "富庄村委会",
+        "regionLevel": 5
+    }
+]
+```
