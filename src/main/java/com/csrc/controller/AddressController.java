@@ -106,7 +106,7 @@ public class AddressController {
                     node.setProvinceName(provinceName);
                     node.setProvinceCode(provinceCode);
                     node.setCode(districtCode);
-                    node.setName(districtCode);
+                    node.setName(districtName);
                     node.setParentCode(tempArr[0]);
                     node.setAncestors(tempArr[1]);
                     node.setRegionLevel(3);
