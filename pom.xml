@@ -63,6 +63,8 @@
                         <directory>src/main/resources</directory>
                         <excludes>
                             <exclude>address.txt</exclude>
+                            <exclude>es/*</exclude>
+                            <exclude>public/*</exclude>
                         </excludes>
                     </resource>
                 </resources>

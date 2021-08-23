@@ -1,0 +1,9 @@
+{
+  "similarity": {
+    "custom_similarity": {
+      "type": "BM25",
+      "k1": 0.1,
+      "b": 0.1
+    }
+  }
+}

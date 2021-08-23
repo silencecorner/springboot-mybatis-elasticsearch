@@ -6,8 +6,13 @@ import com.csrc.service.AddressService;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -18,18 +23,37 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/address")
-public class AddressController {
+public class AddressController implements ApplicationListener<ApplicationStartedEvent> {
     @Autowired
     AddressService addressService;
     @Autowired
     AddressMapper addressMapper;
     @Value("${address-path:classpath:address.txt}")
     String addressPath;
+    @Value("${import.data:false}")
+    boolean importData;
 
+    static Map<String,AddressNode> DIRECT_CITY = new HashMap<String,AddressNode>(){{
+        put("北京市",new AddressNode("11","北京市"));
+        put("北京",new AddressNode("11","北京市"));
+        put("天津市",new AddressNode("12","天津市"));
+        put("天津",new AddressNode("12","天津市"));
+        put("上海市",new AddressNode("31","上海市"));
+        put("上海",new AddressNode("31","上海市"));
+        put("重庆市",new AddressNode("50","重庆市"));
+        put("重庆",new AddressNode("50","重庆市"));
+    }};
     @RequestMapping(value="/searchAddress", method= RequestMethod.GET)
     public List<AddressNode> searchWithGet(String addressName,@RequestParam(defaultValue = "3") Integer level,@RequestParam(defaultValue = "5") Integer size) throws IOException {
+
         List<AddressNode> entityList = null;
         if(StringUtils.isNotEmpty(addressName)) {
+            if (addressName.length() <= 3){
+                AddressNode node = DIRECT_CITY.get(addressName);
+                if (node != null){
+                    return Collections.singletonList(node);
+                }
+            }
             entityList = addressService.searchEntity(addressName,level,size);
             //若返回的十条数据中有三级四级地址，将它们提到前面，底层使用的归并排序，不会破坏三级、四级、五级各自内部初始顺序
             entityList = new ArrayList<>(entityList);
@@ -43,7 +67,7 @@ public class AddressController {
         return addressService.deleteIndex(index);
     }
 
-    @RequestMapping("/readAddress")
+    // @RequestMapping("/readAddress")
     public void readVillageAddress() throws InterruptedException, FileNotFoundException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("处理开始："+df.format(new Date()));
@@ -176,12 +200,26 @@ public class AddressController {
         while(lineNum<list.size()){
             System.out.println("开始linNum:"+lineNum);
             List<AddressNode> listTemp=list.subList(lineNum,(list.size()-lineNum>500)?lineNum+500:list.size());
-            addressMapper.importIntoDb(listTemp);//存入结构化数据库中，但是暂时用不到
+            //addressMapper.importIntoDb(listTemp);//存入结构化数据库中，但是暂时用不到
             addressService.saveEntity(listTemp);//存入es中
             System.out.println("结束linNum:"+lineNum);
             lineNum+=500;//分段执行，以免outOfMemory
             Thread.sleep(500);//给es或数据库一个缓冲时间
         }
         System.out.println("处理结束："+df.format(new Date()));
+    }
+
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
+        if (importData) {
+            try {
+                readVillageAddress();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -1,18 +1,20 @@
 package com.csrc.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 
 /**
  * Created by jianan on 2018/8/23.
  */
 @Document(indexName = "address", useServerConfiguration = true)
+//@Setting(settingPath = "/es/setting.json")
 public class AddressNode {
     public static final String INDEX_NAME = "address";
 
     public static final String TYPE = "address";
-
+    //@Field(type = FieldType.Text, analyzer = "ik_smart",searchAnalyzer = "ik_max_word",indexOptions = IndexOptions.docs)
+    //@Mapping(mappingPath = "/es/mapping.json")
     private String fullAddressName;
     @Id
     private String code; // 当前no，可以是5级中的任何一级
@@ -30,6 +32,16 @@ public class AddressNode {
     private String villageCode = "";
     private String villageName = "";//村
     private Integer regionLevel;
+    public AddressNode(String provinceCode, String provinceName) {
+        this.fullAddressName = provinceName;
+        this.code = provinceCode;
+        this.parentCode = "00";
+        this.ancestors = "00";
+        this.name = provinceName;
+        this.provinceCode = provinceCode;
+        this.provinceName = provinceName;
+        this.regionLevel = 1;
+    }
 
     public AddressNode() {
         super();
